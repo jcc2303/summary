@@ -14,6 +14,10 @@ $ quasar dev
 # build for production with minification
 $ quasar build
 
+# check build
+http-server dist
+google-chrome http://127.0.0.1:8080
+
 # lint code
 $ quasar lint
 
@@ -21,6 +25,7 @@ $ quasar lint
 # deploy
 ./deploy.sh
 https://jcc2303.github.io/summary
+
 
 ```
 

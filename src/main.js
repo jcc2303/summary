@@ -9,6 +9,16 @@ require(`quasar/dist/quasar.${__THEME}.css`)
 import Vue from 'vue'
 import Quasar from 'quasar'
 import router from './router'
+import VideoPlayer from 'vue-video-player'
+
+VideoPlayer.config({
+  youtube: true,  // default false（youtube的支持）
+  switcher: true, // default true（播放源切换功能）
+  hls: true       // default true（直播功能的支持）
+})
+
+// use
+Vue.use(VideoPlayer)
 
 Vue.use(Quasar) // Install Quasar Framework
 
