@@ -4,18 +4,19 @@
     <video-player :options="videoOptions" @player-state-changed="playerStateChanged" ref="myPlayer"></video-player>
 
     <!-- video fragment -->
+    <i @click="stopShot" :disabled="!shot" >compare_arrows</i>
     <q-range v-model="rate" :min="0" :max="2" :step="0.5" label snap markers @input="rateChanged" ></q-range>
     <!-- <q-toggle
       v-model="shot"
     ></q-toggle> -->
-    <i @click="stopShot">video_label</i>
-    <i @click="addShot">playlist_add</i>
+    <i @click="addShot" >playlist_add</i> <!-- :disabled="!video.duration" -->
     <!-- <i @click="replay">replay</i> -->
 
 
     <div class="list">
       <div class="item" v-for="(item,index) in shots" >
-        <div class="item-content has-secondary" @click="playShot(index)">
+        <i class="item-primary" @click="playShot(index)" >compare_arrows</i>
+        <div class="item-content has-secondary" >
           <q-double-range
             class="orange"
             v-model="shots[index]"
@@ -43,8 +44,10 @@ export default {
       videoOptions: {
         source: {
           type: 'video/youtube',
-          src: 'https://www.youtube.com/watch?v=iD_MyDbP_ZE'
+          src: `https://www.youtube.com/watch?v=${this.$route.params.id}`// 'https://www.youtube.com/watch?v=iD_MyDbP_ZE'
         },
+        // defaultSrcReId: 'low',
+        poster: `https://img.youtube.com/vi/${this.$route.params.id}/default.jpg`,
         techOrder: ['youtube'],
         autoplay: false,
         controls: true,
@@ -83,12 +86,39 @@ export default {
     },
     // fragments list add remove
     addShot (event) {
-      this.shot = {
-        min: Math.floor(this.player.currentTime()),
-        max: Math.floor(this.player.duration())
+      if (this.player.duration()) {
+        var min = Math.floor(this.player.currentTime())
+        var max = Math.floor(this.player.duration())
+
+        //  review min between, then split
+        if (this.shots.length > 0) {
+          for (var i = 0; i < this.shots.length; i++) {
+            var si = this.shots[i]
+            if (min < si.min) {
+              max = si.min
+              break
+            }
+            else if (si.min < min) {
+              if (si.max < min) {
+                // descart
+                continue
+              }
+              else if (min < si.max) {
+                si.max = min
+              }
+              break
+            }
+            else return
+          }
+        }
+
+        var shot = {
+          min: min,
+          max: max
+        }
+        this.shots.push(shot)
+        this.shots = this.shots.sort((a, b) => (a.min - b.min))
       }
-      this.shots.push(this.shot)
-      this.shots = this.shots.sort((a, b) => (a.min - b.min))
     },
     removeShot (index) {
       this.shots.splice(index, 1)
@@ -111,7 +141,4 @@ export default {
 }
 </script>
 <style>
-.q-range {
-    /* height: 36px; */
-}
 </style>

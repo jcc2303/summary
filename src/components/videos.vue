@@ -25,8 +25,5 @@ export default {
 </script>
 
 <style>
-.item {
-  position: initial
-}
 
 </style>
