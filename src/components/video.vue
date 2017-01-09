@@ -38,6 +38,9 @@
 <script>
 import { videoPlayer } from 'vue-video-player'
 
+var vtt = require('videojs-vtt.js')
+global.WebVTT = vtt.WebVTT
+
 // youtube - player config example
 export default {
   data () {
