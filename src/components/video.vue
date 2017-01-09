@@ -1,5 +1,6 @@
 <template>
   <div class="player">
+    <button class="primary" v-go-back=" '/' ">Back</button>
     <!-- Use in component(Vue.js1.X && Vue.js2.X && function switch config) -->
     <video-player :options="videoOptions" @player-state-changed="playerStateChanged" ref="myPlayer"></video-player>
 
@@ -66,12 +67,12 @@ export default {
   },
   computed: {
     player () {
-      return this.$refs.myPlayer.player
+      return this.$refs.myPlayer.player // {pause () {}}
     }
   },
   mounted () {
     console.log('this is current player object', this.player)
-    this.player.pause()
+    // this.player.pause()
     // and do something...
   },
   methods: {
@@ -133,7 +134,6 @@ export default {
     rateChanged (rate) {
       this.player.playbackRate(this.rate)
     }
-
   },
   components: {
     videoPlayer

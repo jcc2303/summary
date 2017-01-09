@@ -17,6 +17,8 @@ VideoPlayer.config({
   hls: true       // default true（直播功能的支持）
 })
 
+router.push('/')
+
 // use
 Vue.use(VideoPlayer)
 
