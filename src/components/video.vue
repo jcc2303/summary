@@ -1,6 +1,6 @@
 <template>
   <div class="player">
-    <button class="primary" v-go-back=" '/' ">Back</button>
+    <button class="primary"  @click="removePlayer" v-go-back=" '/' ">Back</button>
     <!-- Use in component(Vue.js1.X && Vue.js2.X && function switch config) -->
     <video-player :options="videoOptions" @player-state-changed="playerStateChanged" ref="myPlayer"></video-player>
 
@@ -15,7 +15,7 @@
 
 
     <div class="list">
-      <div class="item" v-for="(item,index) in shots" >
+      <div class="item item-inset-delimiter" v-for="(item,index) in shots" >
         <i class="item-primary" @click="playShot(index)" >compare_arrows</i>
         <div class="item-content has-secondary" >
           <q-double-range
@@ -38,9 +38,6 @@
 <script>
 import { videoPlayer } from 'vue-video-player'
 
-var vtt = require('videojs-vtt.js')
-global.WebVTT = vtt.WebVTT
-
 // youtube - player config example
 export default {
   data () {
@@ -48,12 +45,13 @@ export default {
       videoOptions: {
         source: {
           type: 'video/youtube',
-          src: `https://www.youtube.com/watch?v=${this.$route.params.id}`// 'https://www.youtube.com/watch?v=iD_MyDbP_ZE'
+          src: `https://www.youtube.com/watch?v=${this.$route.params.id}`// 'iD_MyDbP_ZE' &origin=http://localhost:8080
         },
-        // defaultSrcReId: 'low',
         poster: `https://img.youtube.com/vi/${this.$route.params.id}/default.jpg`,
+        defaultSrcReId: 'low',
         techOrder: ['youtube'],
         autoplay: false,
+        muted: true,
         controls: true,
         ytControls: false,
         playbackRates: [0.7, 1, 1.3, 1.5, 1.7]
@@ -75,10 +73,13 @@ export default {
   },
   mounted () {
     console.log('this is current player object', this.player)
-    // this.player.pause()
+    this.player.pause()
     // and do something...
   },
   methods: {
+    removePlayer () {
+      this.player.dispose()
+    },
     playerStateChanged (playerCurrentState) {
       if (!this.seeking && this.shot && playerCurrentState.currentTime > this.shot.max) {
         this.seeking = true

@@ -11,6 +11,9 @@ import Quasar from 'quasar'
 import router from './router'
 import VideoPlayer from 'vue-video-player'
 
+var vtt = require('videojs-vtt.js')
+global.WebVTT = vtt.WebVTT
+
 VideoPlayer.config({
   youtube: true,  // default false（youtube的支持）
   switcher: true, // default true（播放源切换功能）
