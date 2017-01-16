@@ -58,23 +58,34 @@ export default {
       },
       // fragment
       video: {
-        key: this.$route.params.id // '2rq3j2jGKec'
+        vid: '',
+        shots: []
       },
       shot: null,
-      shots: [],
       seeking: false,
       rate: 1
     }
   },
   computed: {
+    shots () {
+      return this.video.shots
+    },
     player () {
       return this.$refs.myPlayer.player // {pause () {}}
     }
   },
+  // created () { },
   mounted () {
-    console.log('this is current player object', this.player)
+    var vid = this.$route.params.id
+    var videos = this.$root.videos
+    console.log(vid, videos)
+    videos.forEach((video) => {
+      if (video.vid === vid) {
+        this.video = video
+      }
+    })
+
     this.player.pause()
-    // and do something...
   },
   methods: {
     removePlayer () {
@@ -96,9 +107,9 @@ export default {
         var max = Math.floor(this.player.duration())
 
         //  review min between, then split
-        if (this.shots.length > 0) {
-          for (var i = 0; i < this.shots.length; i++) {
-            var si = this.shots[i]
+        if (this.video.shots.length > 0) {
+          for (var i = 0; i < this.video.shots.length; i++) {
+            var si = this.video.shots[i]
             if (min < si.min) {
               max = si.min
               break
@@ -121,15 +132,15 @@ export default {
           min: min,
           max: max
         }
-        this.shots.push(shot)
-        this.shots = this.shots.sort((a, b) => (a.min - b.min))
+        this.video.shots.push(shot)
+        this.video.shots = this.video.shots.sort((a, b) => (a.min - b.min))
       }
     },
     removeShot (index) {
-      this.shots.splice(index, 1)
+      this.video.shots.splice(index, 1)
     },
     playShot (index) {
-      this.shot = this.shots[index]
+      this.shot = this.video.shots[index]
       this.player.currentTime(this.shot.min)
     },
     stopShot () {

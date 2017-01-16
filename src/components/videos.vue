@@ -19,8 +19,7 @@
 
     <section class="main" v-show="videos.length" v-cloak>
       <div class="card"
-          v-for="(video,index) in videos"
-          :key="video.id" >
+          v-for="(video,index) in videos" >
         <img :src="'https://img.youtube.com/vi/'+video.vid+'/default.jpg'" alt="" />
         <!-- <div class="card-content">{{video.name}}</div> -->
         <div class="card-actions">
@@ -40,45 +39,18 @@
 </template>
 
 <script>
-// localStorage persistence
-var STORAGE_KEY = 'summary-1.0'
-var videoStorage = {
-  fetch: function () {
-    var videos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-    videos.forEach(function (video, index) {
-      video.id = index
-    })
-    videoStorage.uid = videos.length
-    console.log(videos)
-    return videos
-  },
-  save: function (videos) {
-    console.log(videos)
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(videos))
-  }
-}
-
 export default {
-  beforeDestroy () {
-    console.log('beforeDestroy', window.history.length)
-  },
-  destroyed () {
-    console.log('destroyed', window.history.length)
-  },
+  // beforeDestroy () {console.log('beforeDestroy', window.history.length)},
+  // destroyed () { console.log('destroyed', window.history.length)},
   data () {
     return {
-      videos: videoStorage.fetch(),
+      videos: [], // this.$root.videos,
       newVideo: {vid: ''}
     }
   },
-  // watch todos change for localStorage persistence
-  watch: {
-    videos: {
-      handler: function (videos) {
-        videoStorage.save(videos)
-      },
-      deep: true
-    }
+  created () {
+    console.log('created', this.$root.videos)
+    this.videos = this.$root.videos
   },
   computed: {},
   methods: {
@@ -87,10 +59,12 @@ export default {
       if (!vid) {
         return
       }
+      console.log(this.videos.length)
       this.videos.push({
-        id: videoStorage.uid++,
-        vid: vid
+        vid: vid,
+        shots: []
       })
+      console.log(this.videos)
       this.newVideo = {vid: ''}
     },
     removeVideo (video) {
