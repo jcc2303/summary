@@ -6,52 +6,69 @@
     </div>
     </q-drawer-link>
   </div> -->
-  <div class="content">
-    <div class="card" v-for="(video,index) in videos" to="'/videos/'+video.id">
-      <!-- <div class="item">
-        <img class="avatar" src="assets/linux-avatar.png">
-        <div class="item-content">
-          <div class="item-label">
-            <p class="item-title">Joe</p>
-            <p>Web Developer</p>
+  <section class="sumaryapp">
+
+    <header class="header">
+      <h1>videos</h1>
+      <input class="new-video"
+        autofocus autocomplete="off"
+        placeholder="video id to watch?"
+        v-model="newVideo.vid"
+        @keyup.enter="addVideo">
+    </header>
+
+    <section class="main" v-show="videos.length" v-cloak>
+      <div class="card"
+          v-for="(video,index) in videos" >
+        <img :src="'https://img.youtube.com/vi/'+video.vid+'/default.jpg'" alt="" />
+        <!-- <div class="card-content">{{video.name}}</div> -->
+        <div class="card-actions">
+          <div class="text-primary">
+            <router-link :to="`/videos/${video.vid}`"><i>play_arrow</i></router-link>
+            <!-- to="'/videos/'+video.id" <a :href="`#/videos/${video.id}`" ><i>thumb_up</i></a> -->
+            <button class="destroy" @click="removeVideo(video)"><i>delete</i></button>
           </div>
+          <div class="auto"></div>
+          <!-- <div class="text-grey-6">
+            23 minutes ago.
+          </div> -->
         </div>
-      </div> -->
-      <img :src="'https://img.youtube.com/vi/'+video.id+'/default.jpg'" alt="" />
-      <div class="card-content">
-        {{video.name}}
       </div>
-      <div class="card-actions">
-        <div class="text-primary">
-          <router-link :to="`/videos/${video.id}`"><i>thumb_up</i></router-link>
-          <!-- <a :href="`#/videos/${video.id}`" ><i>thumb_up</i></a> -->
-        </div>
-        <div class="auto"></div>
-        <!-- <div class="text-grey-6">
-          23 minutes ago.
-        </div> -->
-      </div>
-    </div>
-  </div>
+    </section>
+  </section>
 </template>
 
 <script>
 export default {
-  beforeDestroy () {
-    console.log('beforeDestroy', window.history.length)
-  },
-  destroyed () {
-    console.log('destroyed', window.history.length)
-  },
+  // beforeDestroy () {console.log('beforeDestroy', window.history.length)},
+  // destroyed () { console.log('destroyed', window.history.length)},
   data () {
     return {
-      videos: [
-        {id: '2rq3j2jGKec', name: 'ataca'},
-        {id: 'EPH_nF7wlLY', name: 'desire'},
-        {id: '8W1zWpEtrXg', name: 'desire'}
-      ]
+      videos: [], // this.$root.videos,
+      newVideo: {vid: ''}
+    }
+  },
+  mounted () { // created?
+    this.videos = this.$root.videos
+  },
+  computed: {},
+  methods: {
+    addVideo () {
+      var vid = this.newVideo.vid && this.newVideo.vid.trim()
+      if (!vid) {
+        return
+      }
+      this.videos.push({
+        vid: vid,
+        shots: []
+      })
+      this.newVideo = {vid: ''}
+    },
+    removeVideo (video) {
+      this.videos.splice(this.videos.indexOf(video), 1)
     }
   }
+
 }
 </script>
 
